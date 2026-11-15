@@ -1,0 +1,45 @@
+services:
+  db:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  app:
+    image: ${IMAGE_PATH}
+    restart: unless-stopped
+    networks:
+      default:
+      web:
+        aliases:
+          - instrument-manager
+    volumes:
+      - calibcerts:/app/uploads
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      JWT_SECRET: ${JWT_SECRET}
+      PORT: 3000
+      DB_SSL: "false"
+      SEED_SET: ${SEED_SET}
+      DEMO_PASSWORD: ${DEMO_PASSWORD}
+      UPLOAD_DIR: /app/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  calibcerts:
+
+networks:
+  web:
+    external: true

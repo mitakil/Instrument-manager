@@ -1,0 +1,11 @@
+{
+  "watch": ["src"],
+  "ext": "js,json",
+  "ignore": [
+    "src/**/*.test.js",
+    "src/db/migrations",
+    "src/db/seeds",
+    "node_modules"
+  ],
+  "exec": "node src/index.js"
+}

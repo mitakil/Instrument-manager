@@ -1,0 +1,86 @@
+@baseUrl = http://localhost:3000
+
+# @name loginUser
+POST {{baseUrl}}/api/login
+Content-Type: application/json
+
+{
+    "username": "johndoe",
+    "password": "{{$dotenv DEMO_PASSWORD}"
+}
+
+###
+POST {{baseUrl}}/api/users/adduser
+Content-Type: application/json
+Authorization: Bearer {{loginUser.response.body.token}}
+
+
+{
+    "firstName": "testi2",
+    "lastName": "käyttäjä",
+    "username": "testikäyttäjä1",
+    "password": "{{$dotenv DEMO_PASSWORD}",
+    "role": "user"
+}
+
+###
+POST {{baseUrl}}/api/instruments
+Content-Type: application/json
+Authorization: Bearer {{loginUser.response.body.token}}
+
+{
+  "name": "UV-Vis spectrophotometer",
+  "serial": "UV-20931",
+  "group": "Spectrometry",
+  "asset_id": "LAB-0142",
+  "instrument_location": "Lab 2, bench 4",
+  "manufacturer": "Shimadzu",
+  "model": "UV-1900i",
+  "software": "LabSolutions UV-Vis",
+  "software_version": "1.12",
+  "calibration_frequency": 12,
+  "instrument_status": "in_use"
+}
+
+###
+# @name loginAdmin
+POST {{baseUrl}}/api/login
+Content-Type: application/json
+
+{
+    "username": "mitakil",
+    "password": "{{$dotenv DEMO_PASSWORD}"
+}
+
+###
+POST {{baseUrl}}/api/users/adduser
+Content-Type: application/json
+Authorization: Bearer {{loginAdmin.response.body.token}}
+
+
+{
+    "firstName": "testi2",
+    "lastName": "käyttäjä",
+    "username": "testikäyttäjä1",
+    "password": "{{$dotenv DEMO_PASSWORD}",
+    "role": "user"
+}
+
+###
+POST {{baseUrl}}/api/instruments
+Content-Type: application/json
+Authorization: Bearer {{loginAdmin.response.body.token}}
+
+{
+  "name": "UV-Vis spectrophotometer",
+  "serial": "UV-20931",
+  "group": "Spectrometry",
+  "asset_id": "LAB-01422",
+  "instrument_location": "Lab 2, bench 4",
+  "manufacturer": "Shimadzu",
+  "model": "UV-1900i",
+  "software": "LabSolutions UV-Vis",
+  "software_version": "1.12",
+  "calibration_frequency": 12,
+  "instrument_status": "in_use"
+}

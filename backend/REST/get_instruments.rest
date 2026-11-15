@@ -1,0 +1,75 @@
+@baseUrl = http://localhost:3000
+
+# @name login
+POST {{baseUrl}}/api/login
+Content-Type: application/json
+
+{
+    "username": "mitakil",
+    "password": "{{$dotenv DEMO_PASSWORD}"
+}
+
+###
+GET http://localhost:3000/api/instruments
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+###
+POST {{baseUrl}}/api/instruments
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{
+  "name": "UV-Vis spectrophotometer",
+  "serial": "UV-20931",
+  "group": "Spectrometry",
+  "asset_id": "LAB-0142",
+  "instrument_location": "Lab 2, bench 4",
+  "manufacturer": "Shimadzu",
+  "model": "UV-1900i",
+  "software": "LabSolutions UV-Vis",
+  "software_version": "1.12",
+  "calibration_frequency": 12,
+  "instrument_status": "in_use"
+}
+
+### Not allowed field in controller, expect 201 because od id and calib_status
+POST {{baseUrl}}/api/instruments
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{
+  "name": "UV-Vis spectrophotometer",
+  "serial": "UV-20931",
+  "group": "Spectrometry",
+  "asset_id": "LAB-0142",
+  "instrument_location": "Lab 2, bench 4",
+  "manufacturer": "Shimadzu",
+  "model": "UV-1900i",
+  "software": "LabSolutions UV-Vis",
+  "software_version": "1.12",
+  "calibration_frequency": 12,
+  "instrument_status": "in_use",
+  "calib_status": "ASD"
+}
+
+### Missing required field (expected: 400)
+POST {{baseUrl}}/api/instruments
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{ "serial": "T-2", "group": "General lab" }
+
+### Invalid calibration interval (expected: 400)
+POST {{baseUrl}}/api/instruments
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{ "name": "Test", "serial": "T-1", "group": "General lab", "calibration_frequency": 7 }
+
+###
+PATCH {{baseUrl}}/api/instruments/15
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{ "asset_id": "IN013"}

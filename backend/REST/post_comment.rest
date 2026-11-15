@@ -1,0 +1,22 @@
+@baseUrl = http://localhost:3000
+
+# @name login
+POST {{baseUrl}}/api/login
+Content-Type: application/json
+
+{
+    "username": "johndoe",
+    "password": "{{$dotenv DEMO_PASSWORD}"
+}
+
+###
+POST http://localhost:3000/api/comments
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{
+    "instrumentId": 1,
+    "commentText": "This is a test second comment."
+}
+
+

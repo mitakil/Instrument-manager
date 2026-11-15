@@ -1,0 +1,6 @@
+.env
+/docs/
+/backend/uploads
+.DS_Store
+.vscode
+/docs/backend/

@@ -1,0 +1,21 @@
+@baseUrl = http://localhost:3000
+
+# @name login
+POST {{baseUrl}}/api/login
+Content-Type: application/json
+
+{
+    "username": "mitakil",
+    "password": "{{$dotenv DEMO_PASSWORD}"
+}
+
+###
+POST {{baseUrl}}/api/instruments/1/calibrations
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{
+  "calibration_date": "2026-11-03",
+  "performed_by": "Mettler-Toledo Service",
+  "comment": "Annual calibration, all points within tolerance"
+}
